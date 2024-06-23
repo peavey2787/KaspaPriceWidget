@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>0-kaspa-vibrant.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="0-kaspa-vibrant.png" />
+    <None Remove="abstract_teal_color-wallpaper-1920x1080.jpg" />
+    <None Remove="Resources\0-kaspa-vibrant.png" />
+    <None Remove="Resources\warning_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="0-kaspa-vibrant.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="0-kaspa-vibrant.png" />
+    <Resource Include="abstract_teal_color-wallpaper-1920x1080.jpg" />
+    <Resource Include="Resources\0-kaspa-vibrant.png" />
+    <Resource Include="Resources\warning_icon.png" />
+  </ItemGroup>
+
+</Project>
