@@ -530,7 +530,10 @@ namespace KaspaInfoWidget
         }        
         private void LockMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            isLocked = !isLocked;
 
+            // Update the menu item header based on the new isLocked value
+            lockMenuItem.Header = isLocked ? "Unlock" : "Lock";
 
             SaveSettings();
         }
