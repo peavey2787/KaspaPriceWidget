@@ -1,9 +1,11 @@
 ﻿using KaspaPriceWidget;
+using Microsoft.VisualBasic;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Runtime;
 using System.Text.Json;
 using System.Timers;
 using System.Windows;
@@ -35,6 +37,7 @@ namespace KaspaInfoWidget
         private bool isResizing = false;
         private bool isMoving = false;
         private bool isLocked = false;
+        private SettingsData settings;
         private ResizeDirection resizeDirection;
         [Flags]
         private enum ResizeDirection
@@ -92,7 +95,7 @@ namespace KaspaInfoWidget
                     using (StreamReader reader = new StreamReader(settingsFilePath))
                     {
                         string json = reader.ReadToEnd();
-                        SettingsData settings = JsonSerializer.Deserialize<SettingsData>(json);
+                        settings = JsonSerializer.Deserialize<SettingsData>(json);
                         if (settings != null)
                         {
                             sliderFontSize.Value = settings.FontSize;
@@ -105,6 +108,10 @@ namespace KaspaInfoWidget
                             ApplyOpacity(settings.Opacity);
                             ApplyLock(settings.isLocked);
                             ApplyWindowPosition(settings.WindowLeft, settings.WindowTop, settings.Height, settings.Width);
+                        } 
+                        else
+                        {
+                            settings = new SettingsData();
                         }
                     }
                 }
@@ -157,7 +164,7 @@ namespace KaspaInfoWidget
         private void RefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             FetchCryptoDataAsync();
-            LoadSettings();
+            ApplyWindowPosition(settings.WindowLeft, settings.WindowTop, settings.Height, settings.Width);
             this.countdown = refreshInterval;
         }
         private void CountdownTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -358,6 +365,12 @@ namespace KaspaInfoWidget
         }
         private void ApplyWindowPosition(double left, double top, double height, double width)
         {
+            if (!Application.Current.Dispatcher.CheckAccess())
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() => ApplyWindowPosition(left, top, height, width)));
+                return;
+            }
+
             // Set window position and size
             this.Left = left;
             this.Top = top;
@@ -530,11 +543,7 @@ namespace KaspaInfoWidget
         }        
         private void LockMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            isLocked = !isLocked;
-
-            // Update the menu item header based on the new isLocked value
-            lockMenuItem.Header = isLocked ? "Unlock" : "Lock";
-
+            ApplyLock(!isLocked);
             SaveSettings();
         }
         #endregion
