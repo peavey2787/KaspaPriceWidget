@@ -4,7 +4,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:KaspaInfoWidget"
         Title="KaspaInfoWidget" Height="135" Width="135" MinHeight="135" MinWidth="135" MaxHeight="2160" MaxWidth="4096"
-        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent" BorderThickness="0"
         Topmost="True" Opacity="1.0" Icon="/0-kaspa-vibrant.png"
         Loaded="Window_Loaded">
     <Window.Resources>

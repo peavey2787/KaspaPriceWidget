@@ -104,12 +104,7 @@ namespace KaspaInfoWidget
                             ApplyBackgroundColor(backgroundColor);
                             ApplyOpacity(settings.Opacity);
                             ApplyLock(settings.isLocked);
-
-                            // Set window position and size
-                            this.Left = settings.WindowLeft;
-                            this.Top = settings.WindowTop;
-                            this.Height = settings.Height;
-                            this.Width = settings.Width;
+                            ApplyWindowPosition(settings.WindowLeft, settings.WindowTop, settings.Height, settings.Width);
                         }
                     }
                 }
@@ -162,6 +157,7 @@ namespace KaspaInfoWidget
         private void RefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             FetchCryptoDataAsync();
+            LoadSettings();
             this.countdown = refreshInterval;
         }
         private void CountdownTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -185,8 +181,6 @@ namespace KaspaInfoWidget
 
 
         #region Helpers
-
-
         private void UpdateCircularMask()
         {
             double degrees = 360 * (this.countdown / 90.0); // Calculate the angle of the pie slice based on countdown
@@ -338,14 +332,12 @@ namespace KaspaInfoWidget
             labelCountdown.Foreground = brush;
             colorPicker.SelectedColor = color;
         }
-
         private void ApplyBackgroundColor(Color color)
         {
             SolidColorBrush brush = new SolidColorBrush(color);
             mainBorder.Background = brush;
             backgroundColorPicker.SelectedColor = color;
         }
-
         private void ApplyFontSize(double fontSize)
         {
             labelPrice.FontSize = fontSize;
@@ -354,7 +346,6 @@ namespace KaspaInfoWidget
             labelCountdown.FontSize = fontSize * 0.50;
             sliderFontSize.Value = fontSize;
         }
-
         private void ApplyOpacity(double opacity)
         {
             this.Opacity = opacity;
@@ -364,6 +355,32 @@ namespace KaspaInfoWidget
         {
             this.isLocked = isLocked;
             lockMenuItem.Header = isLocked ? "Unlock" : "Lock"; 
+        }
+        private void ApplyWindowPosition(double left, double top, double height, double width)
+        {
+            // Set window position and size
+            this.Left = left;
+            this.Top = top;
+            this.Height = height;
+            this.Width = width;
+
+            // Get the current application's main window
+            Window mainWindow = Application.Current.MainWindow;
+
+            // Get the working area (screen space excluding taskbar and docked windows)
+            Rect workingArea = SystemParameters.WorkArea;
+
+            // Check if the main window is within the working area
+            if (!workingArea.Contains(new Point(mainWindow.Left, mainWindow.Top)))
+            {
+                // If not, set its location to (0,0)
+                mainWindow.Left = 0;
+                mainWindow.Top = 0;
+
+                isLocked = false;
+                // Update the menu item header based on the new isLocked value
+                lockMenuItem.Header = isLocked ? "Unlock" : "Lock";
+            }
         }
         #endregion
 
@@ -513,10 +530,7 @@ namespace KaspaInfoWidget
         }        
         private void LockMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            isLocked = !isLocked; // Toggle isLocked
 
-            // Update the menu item header based on the new isLocked value
-            lockMenuItem.Header = isLocked ? "Unlock" : "Lock";
 
             SaveSettings();
         }
