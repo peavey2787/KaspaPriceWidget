@@ -128,7 +128,7 @@ namespace KaspaInfoWidget
 
             try
             {
-                SettingsData settings = new SettingsData
+                settings = new SettingsData
                 {
                     FontSize = sliderFontSize.Value,
                     FontColor = colorPicker?.SelectedColor?.ToString() ?? Colors.Black.ToString(),
@@ -140,7 +140,6 @@ namespace KaspaInfoWidget
                     Width = this.Width,
                     isLocked = isLocked
                 };
-
                 string json = JsonSerializer.Serialize(settings);
                 File.WriteAllText(settingsFilePath, json);
             }
@@ -376,10 +375,10 @@ namespace KaspaInfoWidget
             this.Top = top;
             this.Height = height;
             this.Width = width;
-
+            /*
             // Get the current application's main window
             Window mainWindow = Application.Current.MainWindow;
-
+            
             // Get the working area (screen space excluding taskbar and docked windows)
             Rect workingArea = SystemParameters.WorkArea;
 
@@ -393,7 +392,7 @@ namespace KaspaInfoWidget
                 isLocked = false;
                 // Update the menu item header based on the new isLocked value
                 lockMenuItem.Header = isLocked ? "Unlock" : "Lock";
-            }
+            }*/
         }
         #endregion
 
@@ -544,7 +543,7 @@ namespace KaspaInfoWidget
         private void LockMenuItem_Click(object sender, RoutedEventArgs e)
         {
             ApplyLock(!isLocked);
-            SaveSettings();
+            SaveSettings();            
         }
         #endregion
     }
